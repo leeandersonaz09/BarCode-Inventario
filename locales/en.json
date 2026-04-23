@@ -1,0 +1,63 @@
+{
+  "translation": {
+    "common": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "search": "Search",
+      "manual_entry": "Manual Entry",
+      "loading": "Please wait...",
+      "success": "Success",
+      "error": "Error"
+    },
+    "onboarding": {
+      "slide1_title": "Ultra Fast Scanner",
+      "slide1_desc": "Point the camera at any barcode and autofill product data almost instantly.",
+      "slide2_title": "Inventory in your Hand",
+      "slide2_desc": "Manage your offline catalog. Your data is protected and saved securely on your device's memory.",
+      "slide3_title": "Hassle-free Backup",
+      "slide3_desc": "Generate backups to your local storage, Google Drive, or share them via WhatsApp and Email.",
+      "button_next": "SWIPE TO SEE",
+      "button_start": "START NOW"
+    },
+    "home": {
+      "eyebrow": "Smart Offline Catalog",
+      "title": "BarCode Inventory",
+      "subtitle": "Read barcodes, complete product information, and keep your inventory accessible anytime.",
+      "scan_new": "Scan New Product",
+      "scan_new_desc": "Identify and save items to inventory using your back camera.",
+      "view_catalog": "View Catalog",
+      "view_catalog_desc": "Consult, edit, or delete the products saved on this device.",
+      "manual_reg": "Manual Registration",
+      "manual_reg_desc": "Type the product code or name if you prefer not to use the camera.",
+      "tip_title": "Performance Tip",
+      "tip_body": "Products you have already scanned open directly from the local database. Internet connection is only used to search for entirely new items."
+    },
+    "settings": {
+      "title": "Settings",
+      "subtitle": "Manage backups, database, and preferences for your application.",
+      "section_data": "Data Backup",
+      "export_backup": "Share Backup",
+      "export_desc": "Send .db file (Drive, Email, etc)",
+      "export_local": "Save to Device",
+      "export_local_desc": "Create a .db copy in the Files folder",
+      "import_backup": "Restore Backup",
+      "import_desc": "Import old .db file",
+      "storage": "Local Database Status",
+      "storage_desc": "{{count}} items safely registered",
+      "backup_tip": "Note: Google runs an invisible automatic backup of up to 25MB of this app to the cloud, provided Android backup is enabled.",
+      "section_prefs": "Appearance & Preferences",
+      "dark_mode": "Dark Mode",
+      "language": "Interface Language",
+      "section_about": "About the App",
+      "privacy": "Privacy Policy",
+      "privacy_desc": "100% Offline operation guaranteed",
+      "version": "Installed Version",
+      "reset_db": "Wipe entire Database",
+      "reset_alert_title": "Warning: Irreversible Wipe",
+      "reset_alert_desc": "This will permanently delete all saved products on this device and reset the onboarding screen. Are you sure?",
+      "reset_success_title": "App Reset",
+      "reset_success_desc": "Data has been erased. The application will restart now.",
+      "saving_backup": "Please wait, generating backup file..."
+    }
+  }
+}

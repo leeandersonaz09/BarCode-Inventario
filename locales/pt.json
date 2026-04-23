@@ -1,0 +1,63 @@
+{
+  "translation": {
+    "common": {
+      "save": "Salvar",
+      "cancel": "Cancelar",
+      "search": "Pesquisar",
+      "manual_entry": "Digitar Código",
+      "loading": "Aguarde...",
+      "success": "Sucesso",
+      "error": "Erro"
+    },
+    "onboarding": {
+      "slide1_title": "Scanner Ultra Rápido",
+      "slide1_desc": "Aponte a câmera para qualquer código de barras e preencha os dados do produto quase instantaneamente.",
+      "slide2_title": "Estoque na sua Mão",
+      "slide2_desc": "Gerencie seu catálogo offline. Seus dados ficam protegidos e salvos na memória do próprio aparelho.",
+      "slide3_title": "Backup Descomplicado",
+      "slide3_desc": "Gere cópias de segurança na memória do celular, no seu Google Drive ou compartilhe via WhatsApp e E-mail.",
+      "button_next": "DESLIZE PARA VER",
+      "button_start": "COMEÇAR AGORA"
+    },
+    "home": {
+      "eyebrow": "Catálogo Inteligente e Offline",
+      "title": "BarCode Inventário",
+      "subtitle": "Leia códigos de barras, complete informações de produtos e mantenha seu estoque acessível a qualquer momento.",
+      "scan_new": "Escanear Novo Produto",
+      "scan_new_desc": "Identifique e salve itens no estoque usando a câmera traseira.",
+      "view_catalog": "Ver Catálogo",
+      "view_catalog_desc": "Consulte, edite ou exclua os produtos salvos no dispositivo.",
+      "manual_reg": "Cadastro Manual",
+      "manual_reg_desc": "Digite o código ou nome do produto se não quiser usar a câmera.",
+      "tip_title": "Dica de Desempenho",
+      "tip_body": "Produtos que você já escaneou abrem direto do banco local. A conexão com a internet só é usada para buscar itens totalmente novos."
+    },
+    "settings": {
+      "title": "Configurações",
+      "subtitle": "Gerencie backups, banco de dados e preferências do seu aplicativo.",
+      "section_data": "Backup de Dados",
+      "export_backup": "Compartilhar Backup",
+      "export_desc": "Enviar arquivo .db (Drive, Email, etc)",
+      "export_local": "Salvar no Celular",
+      "export_local_desc": "Criar cópia .db na pasta de Arquivos",
+      "import_backup": "Restaurar Backup",
+      "import_desc": "Importar arquivo .db antigo",
+      "storage": "Situação do Banco Local",
+      "storage_desc": "{{count}} itens cadastrados com segurança",
+      "backup_tip": "Nota: O Google faz um backup automático invisível de até 25MB deste app na sua nuvem, caso o backup do Android esteja ativo.",
+      "section_prefs": "Aparência e Preferências",
+      "dark_mode": "Modo Escuro (Night Mode)",
+      "language": "Idioma da Interface",
+      "section_about": "Sobre o Aplicativo",
+      "privacy": "Política de Privacidade",
+      "privacy_desc": "Garantia de operação 100% Offline",
+      "version": "Versão Instalada",
+      "reset_db": "Limpar todo o Banco de Dados",
+      "reset_alert_title": "Atenção: Limpeza Irreversível",
+      "reset_alert_desc": "Isso apagará permanentemente todos os produtos salvos neste dispositivo e resetará a tela de apresentação. Tem certeza?",
+      "reset_success_title": "App Redefinido",
+      "reset_success_desc": "Os dados foram apagados. O aplicativo será reiniciado agora.",
+      "saving_backup": "Aguarde, gerando o arquivo de backup..."
+    }
+  }
+}
