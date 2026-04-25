@@ -7,7 +7,18 @@
       "manual_entry": "Digitar Código",
       "loading": "Aguarde...",
       "success": "Sucesso",
-      "error": "Erro"
+      "error": "Erro",
+      "delete": "Apagar",
+      "delete_confirm": "Apagar",
+      "loading_products": "Carregando produtos...",
+      "no_brand": "Marca não informada",
+      "copied": "Copiado!",
+      "copied_desc": "O código foi copiado para a área de transferência."
+    },
+    "tabs": {
+      "home": "Início",
+      "catalog": "Catálogo",
+      "settings": "Ajustes"
     },
     "onboarding": {
       "slide1_title": "Scanner Ultra Rápido",
@@ -48,6 +59,7 @@
       "section_prefs": "Aparência e Preferências",
       "dark_mode": "Modo Escuro (Night Mode)",
       "language": "Idioma da Interface",
+      "language_select": "Escolha o idioma de sua preferência",
       "section_about": "Sobre o Aplicativo",
       "privacy": "Política de Privacidade",
       "privacy_desc": "Garantia de operação 100% Offline",
@@ -58,6 +70,64 @@
       "reset_success_title": "App Redefinido",
       "reset_success_desc": "Os dados foram apagados. O aplicativo será reiniciado agora.",
       "saving_backup": "Aguarde, gerando o arquivo de backup..."
+    },
+    "catalog": {
+      "items": "{{count}} itens",
+      "export": "Exportar",
+      "export_menu": "Exportar catálogo",
+      "export_desc": "Escolha o formato do arquivo.",
+      "export_pdf": "PDF",
+      "export_csv": "CSV",
+      "empty": "Nenhum produto ainda",
+      "empty_desc": "Escaneie ou cadastre manualmente para montar seu catálogo offline.",
+      "empty_alert": "Cadastre pelo menos um produto antes de exportar.",
+      "edit_title": "Editar produto",
+      "field_name": "Nome do Produto",
+      "field_brand": "Marca",
+      "field_qty": "Qtd/Peso",
+      "field_cat": "Categoria",
+      "field_price": "Preço",
+      "delete_title": "Apagar produto",
+      "delete_msg": "Deseja remover \"{{name}}\" do catálogo?"
+    },
+    "manual": {
+      "title": "Cadastro Manual",
+      "subtitle": "Use quando o produto não tiver código legível ou não aparecer na busca.",
+      "fields_barcode": "Código EAN/UPC",
+      "fields_name": "Nome do produto",
+      "fields_brand": "Marca",
+      "fields_qty": "Quantidade",
+      "fields_cat": "Categorias",
+      "fields_url": "URL da imagem",
+      "fields_price": "Preço",
+      "save_btn": "Salvar Produto",
+      "saving": "Salvando...",
+      "req_fields": "Campos obrigatórios",
+      "req_msg": "Informe pelo menos o código e o nome do produto.",
+      "invalid_price": "Preço inválido",
+      "invalid_price_msg": "Digite um valor numérico, como 12,90."
+    },
+    "scanner": {
+      "permission_title": "Permissão da câmera",
+      "permission_msg": "Precisamos acessar a câmera para ler códigos de barras.",
+      "permission_btn": "Conceder Permissão",
+      "manual_input": "DIGITAR CÓDIGO",
+      "instruction": "Aponte para o código",
+      "loading_api": "Consultando múltiplas bases de dados...",
+      "type_code": "Digitar Código",
+      "btn_cancel": "Cancelar",
+      "btn_search": "Pesquisar",
+      "found_offline": "Encontrado offline",
+      "found_online": "Encontrado online",
+      "price_manual": "Preço manual",
+      "update_price": "Atualizar Preço",
+      "save_catalog": "Salvar no Catálogo",
+      "not_found": "Não encontrado",
+      "not_found_msg": "Não encontramos esse código. Deseja cadastrar manualmente?",
+      "try_another": "Tentar outro",
+      "register": "Cadastrar",
+      "invalid_code": "Código inválido",
+      "invalid_code_msg": "Por favor, digite um código válido."
     }
   }
 }

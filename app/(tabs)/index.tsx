@@ -1,6 +1,6 @@
-import { useRouter } from 'expo-router';
+import { useNavigation, useRouter } from 'expo-router';
 import { ChevronRight, Package, PlusCircle, ScanBarcode } from 'lucide-react-native';
-import { ComponentType } from 'react';
+import { ComponentType, useEffect } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
@@ -16,8 +16,15 @@ type ActionCardProps = {
 
 export default function HomeScreen() {
   const router = useRouter();
+  const navigation = useNavigation();
   const { colors } = useAppTheme();
   const { t } = useTranslation();
+
+  useEffect(() => {
+    navigation.setOptions({
+      title: t('tabs.home'),
+    });
+  }, [t, navigation]);
 
   const actionCards: ActionCardProps[] = [
     {

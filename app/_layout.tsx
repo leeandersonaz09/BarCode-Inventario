@@ -12,6 +12,7 @@ import { AppThemeProvider, useAppTheme } from '@/hooks/useAppTheme';
 import { initDatabase } from '@/database/db';
 import { SplashScreenProvider } from '@/components/SplashScreenProvider';
 import { Onboarding } from '@/components/Onboarding';
+import { LanguageSelection } from '@/components/LanguageSelection';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync().catch(() => {});
@@ -19,6 +20,7 @@ SplashScreen.preventAutoHideAsync().catch(() => {});
 export default function RootLayout() {
   const [isDbReady, setIsDbReady] = useState(false);
   const [hasSeenOnboarding, setHasSeenOnboarding] = useState<boolean | null>(null);
+  const [hasSelectedLanguage, setHasSelectedLanguage] = useState<boolean | null>(null);
   
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
@@ -33,6 +35,10 @@ export default function RootLayout() {
         // Check onboarding status
         const onboardingValue = await AsyncStorage.getItem('@has_seen_onboarding');
         setHasSeenOnboarding(onboardingValue === 'true');
+
+        // Check language selection
+        const languageValue = await AsyncStorage.getItem('@app_language');
+        setHasSelectedLanguage(languageValue !== null);
       } catch (e) {
         console.warn(e);
       }
@@ -41,14 +47,16 @@ export default function RootLayout() {
     prepare();
   }, []);
 
-  if (!loaded || !isDbReady || hasSeenOnboarding === null) {
+  if (!loaded || !isDbReady || hasSeenOnboarding === null || hasSelectedLanguage === null) {
     return null;
   }
 
   return (
     <AppThemeProvider>
       <SplashScreenProvider>
-        {!hasSeenOnboarding ? (
+        {!hasSelectedLanguage ? (
+          <LanguageSelection onFinished={() => setHasSelectedLanguage(true)} />
+        ) : !hasSeenOnboarding ? (
           <Onboarding onFinished={() => setHasSeenOnboarding(true)} />
         ) : (
           <RootNavigator />

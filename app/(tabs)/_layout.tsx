@@ -1,11 +1,13 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
 import { Home, Package, Settings } from 'lucide-react-native';
+import { useTranslation } from 'react-i18next';
 
 import { useAppTheme } from '@/hooks/useAppTheme';
 
 export default function TabLayout() {
   const { colors } = useAppTheme();
+  const { t } = useTranslation();
 
   return (
     <Tabs
@@ -29,21 +31,21 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Início',
+          title: t('tabs.home'),
           tabBarIcon: ({ color }) => <Home size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="products"
         options={{
-          title: 'Catálogo',
+          title: t('tabs.catalog'),
           tabBarIcon: ({ color }) => <Package size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="settings"
         options={{
-          title: 'Ajustes',
+          title: t('tabs.settings'),
           tabBarIcon: ({ color }) => <Settings size={24} color={color} />,
         }}
       />

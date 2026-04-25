@@ -7,7 +7,18 @@
       "manual_entry": "Manual Entry",
       "loading": "Please wait...",
       "success": "Success",
-      "error": "Error"
+      "error": "Error",
+      "delete": "Delete",
+      "delete_confirm": "Delete",
+      "loading_products": "Loading products...",
+      "no_brand": "Brand not informed",
+      "copied": "Copied!",
+      "copied_desc": "The barcode was copied to clipboard."
+    },
+    "tabs": {
+      "home": "Home",
+      "catalog": "Catalog",
+      "settings": "Settings"
     },
     "onboarding": {
       "slide1_title": "Ultra Fast Scanner",
@@ -48,6 +59,7 @@
       "section_prefs": "Appearance & Preferences",
       "dark_mode": "Dark Mode",
       "language": "Interface Language",
+      "language_select": "Choose your preferred language",
       "section_about": "About the App",
       "privacy": "Privacy Policy",
       "privacy_desc": "100% Offline operation guaranteed",
@@ -58,6 +70,64 @@
       "reset_success_title": "App Reset",
       "reset_success_desc": "Data has been erased. The application will restart now.",
       "saving_backup": "Please wait, generating backup file..."
+    },
+    "catalog": {
+      "items": "{{count}} items",
+      "export": "Export",
+      "export_menu": "Export Catalog",
+      "export_desc": "Choose the file format.",
+      "export_pdf": "PDF",
+      "export_csv": "CSV",
+      "empty": "Empty Catalog",
+      "empty_desc": "Scan or manually register products to build your offline catalog.",
+      "empty_alert": "Register at least one product before exporting.",
+      "edit_title": "Edit Product",
+      "field_name": "Product Name",
+      "field_brand": "Brand",
+      "field_qty": "Qty/Weight",
+      "field_cat": "Category",
+      "field_price": "Price",
+      "delete_title": "Delete product",
+      "delete_msg": "Do you want to remove \"{{name}}\" from the catalog?"
+    },
+    "manual": {
+      "title": "Manual Registration",
+      "subtitle": "Use this when the product does not have a readable barcode or isn't on Open Food Facts.",
+      "fields_barcode": "EAN/UPC Code",
+      "fields_name": "Product Name",
+      "fields_brand": "Brand",
+      "fields_qty": "Quantity",
+      "fields_cat": "Categories",
+      "fields_url": "Image URL",
+      "fields_price": "Price",
+      "save_btn": "Save Product",
+      "saving": "Saving...",
+      "req_fields": "Required Fields",
+      "req_msg": "Please provide at least the barcode and product name.",
+      "invalid_price": "Invalid Price",
+      "invalid_price_msg": "Enter a valid numeric value, like 12.90."
+    },
+    "scanner": {
+      "permission_title": "Camera Permission",
+      "permission_msg": "We need access to your camera to scan barcodes.",
+      "permission_btn": "Grant Permission",
+      "manual_input": "TYPE CODE",
+      "instruction": "Point at the barcode",
+      "loading_api": "Querying multiple databases...",
+      "type_code": "Type Code",
+      "btn_cancel": "Cancel",
+      "btn_search": "Search",
+      "found_offline": "Found offline",
+      "found_online": "Found online",
+      "price_manual": "Manual Price",
+      "update_price": "Update Price",
+      "save_catalog": "Save to Catalog",
+      "not_found": "Not found",
+      "not_found_msg": "We couldn't find this barcode. Do you want to register it manually?",
+      "try_another": "Try another",
+      "register": "Register",
+      "invalid_code": "Invalid Code",
+      "invalid_code_msg": "Please enter a valid code."
     }
   }
 }

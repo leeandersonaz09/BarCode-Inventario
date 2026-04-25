@@ -1,11 +1,11 @@
 import { useFocusEffect } from '@react-navigation/native';
-import { useRouter } from 'expo-router';
+import { useNavigation, useRouter } from 'expo-router';
 import { File, Paths } from 'expo-file-system';
 import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
 import * as Clipboard from 'expo-clipboard';
 import { Copy, Edit3, FileDown, FileText, PackageOpen, Plus, Trash2, X } from 'lucide-react-native';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -21,6 +21,7 @@ import {
 
 import { deleteProduct, getAllProducts, Product, updateProduct } from '@/database/db';
 import { useAppTheme } from '@/hooks/useAppTheme';
+import { useTranslation } from 'react-i18next';
 
 export default function ProductsScreen() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -36,6 +37,14 @@ export default function ProductsScreen() {
 
   const { colors } = useAppTheme();
   const router = useRouter();
+  const navigation = useNavigation();
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    navigation.setOptions({
+      title: t('tabs.catalog'),
+    });
+  }, [t, navigation]);
 
   const totalValue = useMemo(
     () => products.reduce((sum, product) => sum + Number(product.price || 0), 0),
@@ -48,7 +57,7 @@ export default function ProductsScreen() {
       const data = await getAllProducts();
       setProducts(data);
     } catch {
-      Alert.alert('Erro', 'Não foi possível carregar o catálogo local.');
+      Alert.alert(t('common.error'), t('common.error'));
     } finally {
       setLoading(false);
     }
@@ -83,7 +92,7 @@ export default function ProductsScreen() {
 
     const parsedPrice = parsePrice(editPrice);
     if (parsedPrice === null) {
-      Alert.alert('Preço inválido', 'Digite um valor numérico, como 12,90.');
+      Alert.alert(t('manual.invalid_price'), t('manual.invalid_price_msg'));
       return;
     }
 
@@ -98,17 +107,17 @@ export default function ProductsScreen() {
       closeEditor();
       await loadProducts();
     } catch (error) {
-      Alert.alert('Erro', 'Não foi possível atualizar o produto.');
+      Alert.alert(t('common.error'), t('common.error'));
     }
   };
 
   const handleDelete = (product: Product) => {
     if (!product.id) return;
 
-    Alert.alert('Apagar produto', `Deseja remover "${product.name}" do catálogo?`, [
-      { text: 'Cancelar', style: 'cancel' },
+    Alert.alert(t('catalog.delete_title'), t('catalog.delete_msg', { name: product.name }), [
+      { text: t('common.cancel'), style: 'cancel' },
       {
-        text: 'Apagar',
+        text: t('common.delete_confirm'),
         style: 'destructive',
         onPress: async () => {
           await deleteProduct(product.id!);
@@ -121,7 +130,7 @@ export default function ProductsScreen() {
 
   const exportPDF = async () => {
     if (!products.length) {
-      Alert.alert('Catálogo vazio', 'Cadastre pelo menos um produto antes de exportar.');
+      Alert.alert(t('catalog.empty'), t('catalog.empty_alert'));
       return;
     }
 
@@ -132,7 +141,7 @@ export default function ProductsScreen() {
 
   const exportCSV = async () => {
     if (!products.length) {
-      Alert.alert('Catálogo vazio', 'Cadastre pelo menos um produto antes de exportar.');
+      Alert.alert(t('catalog.empty'), t('catalog.empty_alert'));
       return;
     }
 
@@ -144,10 +153,10 @@ export default function ProductsScreen() {
   };
 
   const openExportMenu = () => {
-    Alert.alert('Exportar catálogo', 'Escolha o formato do arquivo.', [
-      { text: 'PDF', onPress: exportPDF },
-      { text: 'CSV', onPress: exportCSV },
-      { text: 'Cancelar', style: 'cancel' },
+    Alert.alert(t('catalog.export_menu'), t('catalog.export_desc'), [
+      { text: t('catalog.export_pdf'), onPress: exportPDF },
+      { text: t('catalog.export_csv'), onPress: exportCSV },
+      { text: t('common.cancel'), style: 'cancel' },
     ]);
   };
 
@@ -155,9 +164,9 @@ export default function ProductsScreen() {
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.header}>
         <View>
-          <Text style={[styles.title, { color: colors.text }]}>Catálogo</Text>
+          <Text style={[styles.title, { color: colors.text }]}>{t('tabs.catalog')}</Text>
           <Text style={[styles.subtitle, { color: colors.mutedText }]}>
-            {products.length} itens • {formatCurrency(totalValue)}
+            {t('catalog.items', { count: products.length })} • {formatCurrency(totalValue)}
           </Text>
         </View>
         <Pressable
@@ -167,14 +176,14 @@ export default function ProductsScreen() {
           ]}
           onPress={openExportMenu}>
           <FileDown size={20} color={colors.tint} />
-          <Text style={[styles.exportText, { color: colors.text }]}>Exportar</Text>
+          <Text style={[styles.exportText, { color: colors.text }]}>{t('catalog.export')}</Text>
         </Pressable>
       </View>
 
       {loading ? (
         <View style={styles.centerState}>
           <ActivityIndicator color={colors.tint} />
-          <Text style={[styles.stateText, { color: colors.mutedText }]}>Carregando produtos...</Text>
+          <Text style={[styles.stateText, { color: colors.mutedText }]}>{t('common.loading_products')}</Text>
         </View>
       ) : (
         <FlatList
@@ -202,7 +211,7 @@ export default function ProductsScreen() {
           <View style={[styles.modalContent, { backgroundColor: colors.surface, maxHeight: '85%' }]}>
             <View style={styles.modalHeader}>
               <View>
-                <Text style={[styles.modalTitle, { color: colors.text }]}>Editar produto</Text>
+                <Text style={[styles.modalTitle, { color: colors.text }]}>{t('catalog.edit_title')}</Text>
                 <Text style={[styles.modalSubtitle, { color: colors.mutedText }]}>{editingProduct?.barcode}</Text>
               </View>
               <Pressable style={styles.iconButton} onPress={closeEditor}>
@@ -216,7 +225,7 @@ export default function ProductsScreen() {
               renderItem={() => (
                 <View style={{ gap: 16, paddingBottom: 10, paddingTop: 10 }}>
                   <View style={styles.inputGroup}>
-                    <Text style={[styles.inputLabel, { color: colors.mutedText }]}>Nome do Produto</Text>
+                    <Text style={[styles.inputLabel, { color: colors.mutedText }]}>{t('catalog.field_name')}</Text>
                     <TextInput
                       style={[styles.smallInput, { borderColor: colors.border, color: colors.text, backgroundColor: colors.background }]}
                       value={editName}
@@ -228,7 +237,7 @@ export default function ProductsScreen() {
 
                   <View style={{ flexDirection: 'row', gap: 12 }}>
                     <View style={[styles.inputGroup, { flex: 1 }]}>
-                      <Text style={[styles.inputLabel, { color: colors.mutedText }]}>Marca</Text>
+                      <Text style={[styles.inputLabel, { color: colors.mutedText }]}>{t('catalog.field_brand')}</Text>
                       <TextInput
                         style={[styles.smallInput, { borderColor: colors.border, color: colors.text, backgroundColor: colors.background }]}
                         value={editBrand}
@@ -238,7 +247,7 @@ export default function ProductsScreen() {
                       />
                     </View>
                     <View style={[styles.inputGroup, { flex: 1 }]}>
-                      <Text style={[styles.inputLabel, { color: colors.mutedText }]}>Qtd/Peso</Text>
+                      <Text style={[styles.inputLabel, { color: colors.mutedText }]}>{t('catalog.field_qty')}</Text>
                       <TextInput
                         style={[styles.smallInput, { borderColor: colors.border, color: colors.text, backgroundColor: colors.background }]}
                         value={editQty}
@@ -250,7 +259,7 @@ export default function ProductsScreen() {
                   </View>
 
                   <View style={styles.inputGroup}>
-                    <Text style={[styles.inputLabel, { color: colors.mutedText }]}>Categoria</Text>
+                    <Text style={[styles.inputLabel, { color: colors.mutedText }]}>{t('catalog.field_cat')}</Text>
                     <TextInput
                       style={[styles.smallInput, { borderColor: colors.border, color: colors.text, backgroundColor: colors.background }]}
                       value={editCat}
@@ -261,7 +270,7 @@ export default function ProductsScreen() {
                   </View>
 
                   <View style={styles.inputGroup}>
-                    <Text style={[styles.inputLabel, { color: colors.mutedText }]}>Preço</Text>
+                    <Text style={[styles.inputLabel, { color: colors.mutedText }]}>{t('catalog.field_price')}</Text>
                     <TextInput
                       style={[styles.priceInput, { borderColor: colors.border, color: colors.text, backgroundColor: colors.background }]}
                       value={editPrice}
@@ -280,11 +289,11 @@ export default function ProductsScreen() {
             <View style={styles.modalActions}>
               <Pressable style={[styles.deleteButton, { borderColor: colors.danger }]} onPress={() => editingProduct && handleDelete(editingProduct)}>
                 <Trash2 size={18} color={colors.danger} />
-                <Text style={[styles.deleteText, { color: colors.danger }]}>Apagar</Text>
+                <Text style={[styles.deleteText, { color: colors.danger }]}>{t('common.delete')}</Text>
               </Pressable>
               <Pressable style={[styles.saveButton, { backgroundColor: colors.tint }]} onPress={handleUpdate}>
                 <Edit3 size={18} color="#FFFFFF" />
-                <Text style={styles.saveText}>Salvar</Text>
+                <Text style={styles.saveText}>{t('common.save')}</Text>
               </Pressable>
             </View>
           </View>
@@ -296,10 +305,11 @@ export default function ProductsScreen() {
 
 function ProductCard({ product, onPress }: { product: Product; onPress: () => void }) {
   const { colors } = useAppTheme();
+  const { t } = useTranslation();
 
   const copyToClipboard = async () => {
     await Clipboard.setStringAsync(product.barcode);
-    Alert.alert('Copiado!', `O código ${product.barcode} foi copiado para a área de transferência.`, [], { cancelable: true });
+    Alert.alert(t('common.copied'), t('common.copied_desc'), [], { cancelable: true });
   };
 
   return (
@@ -315,7 +325,7 @@ function ProductCard({ product, onPress }: { product: Product; onPress: () => vo
           {product.name}
         </Text>
         <Text style={[styles.brand, { color: colors.mutedText }]} numberOfLines={1}>
-          {product.brand || 'Marca não informada'}
+          {product.brand || t('common.no_brand')}
         </Text>
         
         <Pressable 
@@ -340,13 +350,14 @@ function ProductCard({ product, onPress }: { product: Product; onPress: () => vo
 
 function EmptyState() {
   const { colors } = useAppTheme();
+  const { t } = useTranslation();
 
   return (
     <View style={styles.centerState}>
       <PackageOpen size={42} color={colors.mutedText} />
-      <Text style={[styles.emptyTitle, { color: colors.text }]}>Nenhum produto ainda</Text>
+      <Text style={[styles.emptyTitle, { color: colors.text }]}>{t('catalog.empty')}</Text>
       <Text style={[styles.stateText, { color: colors.mutedText }]}>
-        Escaneie ou cadastre manualmente para montar seu catálogo offline.
+        {t('catalog.empty_desc')}
       </Text>
     </View>
   );

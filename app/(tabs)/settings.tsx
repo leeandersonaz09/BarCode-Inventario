@@ -1,6 +1,7 @@
-import { Alert, Pressable, ScrollView, StyleSheet, Switch, Text, View, ActivityIndicator } from 'react-native';
-import { Bell, Database, Globe, Info, Moon, Shield, Sun, Download, Upload, HardDrive } from 'lucide-react-native';
+import { Alert, Pressable, ScrollView, StyleSheet, Switch, Text, View, ActivityIndicator, Linking } from 'react-native';
+import { Bell, Database, Globe, Info, Moon, Shield, Sun, Download, Upload, HardDrive, ChevronDown, ExternalLink } from 'lucide-react-native';
 import { ReactNode, useEffect, useState } from 'react';
+import { useNavigation } from 'expo-router';
 import * as Updates from 'expo-updates';
 import Constants from 'expo-constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -14,8 +15,16 @@ export default function SettingsScreen() {
   const { colors, isDark, toggleTheme } = useAppTheme();
   const [productCount, setProductCount] = useState(0);
   const [isBackupLoading, setIsBackupLoading] = useState(false);
+  const [showLangMenu, setShowLangMenu] = useState(false);
   const { t, i18n } = useTranslation();
+  const navigation = useNavigation();
   const appVersion = Constants.expoConfig?.version ?? '1.0.0';
+
+  useEffect(() => {
+    navigation.setOptions({
+      title: t('tabs.settings'),
+    });
+  }, [t, navigation]);
 
   useEffect(() => {
     async function loadStats() {
@@ -29,10 +38,10 @@ export default function SettingsScreen() {
     loadStats();
   }, []);
 
-  const toggleLanguage = async () => {
-    const newLang = i18n.language === 'pt' ? 'en' : 'pt';
-    await i18n.changeLanguage(newLang);
-    await AsyncStorage.setItem('@app_language', newLang);
+  const selectLanguage = async (lang: string) => {
+    await i18n.changeLanguage(lang);
+    await AsyncStorage.setItem('@app_language', lang);
+    setShowLangMenu(false);
   };
 
   const handleExport = async () => {
@@ -118,16 +127,52 @@ export default function SettingsScreen() {
           <SettingItem icon={isDark ? Moon : Sun} title={t('settings.dark_mode')} color={colors.tint}>
             <Switch value={isDark} onValueChange={toggleTheme} trackColor={{ false: colors.border, true: colors.tint }} />
           </SettingItem>
-          <Pressable onPress={toggleLanguage}>
-            <SettingItem icon={Globe} title={t('settings.language')} value={i18n.language === 'pt' ? 'Português (BR)' : 'English'} color={colors.success} />
+          
+          <Pressable onPress={() => setShowLangMenu(!showLangMenu)}>
+            <SettingItem icon={Globe} title={t('settings.language')} value={i18n.language === 'pt' ? 'Português (BR)' : 'English'} color={colors.success} hideBorder={showLangMenu}>
+              <ChevronDown 
+                size={20} 
+                color={colors.tint} 
+                style={{ transform: [{ rotate: showLangMenu ? '180deg' : '0deg' }] }} 
+              />
+            </SettingItem>
           </Pressable>
+
+          {showLangMenu && (
+            <View style={[styles.dropdown, { backgroundColor: colors.background, borderTopColor: colors.border }]}>
+              <Pressable 
+                style={({ pressed }) => [styles.dropdownItem, { backgroundColor: pressed ? colors.surfaceMuted : 'transparent' }]} 
+                onPress={() => selectLanguage('pt')}
+              >
+                <Text style={[styles.dropdownText, { color: i18n.language === 'pt' ? colors.tint : colors.text, fontWeight: i18n.language === 'pt' ? '800' : '500' }]}>
+                  🇧🇷 Português (Brasil)
+                </Text>
+              </Pressable>
+              
+              <View style={[styles.separator, { backgroundColor: colors.border }]} />
+
+              <Pressable 
+                style={({ pressed }) => [styles.dropdownItem, { backgroundColor: pressed ? colors.surfaceMuted : 'transparent' }]} 
+                onPress={() => selectLanguage('en')}
+              >
+                <Text style={[styles.dropdownText, { color: i18n.language === 'en' ? colors.tint : colors.text, fontWeight: i18n.language === 'en' ? '800' : '500' }]}>
+                  🇺🇸 English
+                </Text>
+              </Pressable>
+            </View>
+          )}
+
         </View>
       </View>
 
       <View style={styles.section}>
         <Text style={[styles.sectionTitle, { color: colors.mutedText }]}>{t('settings.section_about')}</Text>
         <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-          <SettingItem icon={Shield} title={t('settings.privacy')} value={t('settings.privacy_desc')} color={colors.success} />
+          <Pressable onPress={() => Linking.openURL('https://leeandersonaz09.github.io/BarCode-Inventario-privacy/privacy-policy.html')}>
+            <SettingItem icon={Shield} title={t('settings.privacy')} value={t('settings.privacy_desc')} color={colors.success}>
+              <ExternalLink size={20} color={colors.mutedText} />
+            </SettingItem>
+          </Pressable>
           <SettingItem icon={Info} title={t('settings.version')} value={appVersion} color={colors.mutedText} />
         </View>
       </View>
@@ -150,22 +195,27 @@ function SettingItem({
   value,
   color,
   children,
+  hideBorder,
 }: {
   icon: typeof Sun;
   title: string;
   value?: string;
   color: string;
   children?: ReactNode;
+  hideBorder?: boolean;
 }) {
   const { colors } = useAppTheme();
 
   return (
-    <View style={[styles.item, { borderBottomColor: colors.border }]}>
+    <View style={[styles.item, { borderBottomColor: hideBorder ? 'transparent' : colors.border }]}>
       <View style={[styles.iconBox, { backgroundColor: `${color}1F` }]}>
         <Icon size={20} color={color} />
       </View>
-      <Text style={[styles.itemTitle, { color: colors.text }]}>{title}</Text>
-      {children ?? <Text style={[styles.itemValue, { color: colors.mutedText }]}>{value}</Text>}
+      <View style={{ flex: 1, gap: 2, paddingRight: 8 }}>
+        <Text style={[styles.itemTitle, { color: colors.text }]}>{title}</Text>
+        {value ? <Text style={[styles.itemValue, { color: colors.mutedText }]}>{value}</Text> : null}
+      </View>
+      {children}
     </View>
   );
 }
@@ -205,12 +255,28 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     overflow: 'hidden',
   },
+  dropdown: {
+    paddingVertical: 8,
+    borderTopWidth: StyleSheet.hairlineWidth,
+  },
+  dropdownItem: {
+    paddingVertical: 14,
+    paddingHorizontal: 22,
+  },
+  dropdownText: {
+    fontSize: 16,
+  },
+  separator: {
+    height: StyleSheet.hairlineWidth,
+    marginHorizontal: 22,
+  },
   item: {
     minHeight: 68,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 14,
     paddingHorizontal: 16,
+    paddingVertical: 12,
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   iconBox: {

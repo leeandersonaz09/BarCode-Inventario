@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 
 import { getProductByBarcode, ProductInput, saveProduct } from '@/database/db';
+import { useTranslation } from 'react-i18next';
 
 type ProductDraft = ProductInput & {
   id?: number;
@@ -36,6 +37,7 @@ export default function ScannerScreen() {
   const [manualInputCode, setManualInputCode] = useState('');
   
   const router = useRouter();
+  const { t } = useTranslation();
 
   if (!permission) {
     return <View style={styles.container} />;
@@ -44,10 +46,10 @@ export default function ScannerScreen() {
   if (!permission.granted) {
     return (
       <View style={styles.permissionContainer}>
-        <Text style={styles.permissionTitle}>Permissão da câmera</Text>
-        <Text style={styles.permissionText}>Precisamos acessar a câmera para ler códigos de barras.</Text>
+        <Text style={styles.permissionTitle}>{t('scanner.permission_title')}</Text>
+        <Text style={styles.permissionText}>{t('scanner.permission_msg')}</Text>
         <Pressable style={styles.primaryButton} onPress={requestPermission}>
-          <Text style={styles.primaryButtonText}>Conceder Permissão</Text>
+          <Text style={styles.primaryButtonText}>{t('scanner.permission_btn')}</Text>
         </Pressable>
       </View>
     );
@@ -76,10 +78,10 @@ export default function ScannerScreen() {
       const productFromApi = await findProductInExternalSources(data);
       
       if (!productFromApi) {
-        Alert.alert('Não encontrado', 'Não encontramos esse código. Deseja cadastrar manualmente?', [
-          { text: 'Tentar outro', onPress: resetScanner },
+        Alert.alert(t('scanner.not_found'), t('scanner.not_found_msg'), [
+          { text: t('scanner.try_another'), onPress: resetScanner },
           {
-            text: 'Cadastrar',
+            text: t('scanner.register'),
             onPress: () => router.replace({ pathname: '/manual', params: { barcode: data } }),
           },
         ]);
@@ -90,7 +92,7 @@ export default function ScannerScreen() {
       setPrice('');
     } catch (error) {
       console.error('Erro no processamento:', error);
-      Alert.alert('Erro', 'Ocorreu um problema. Tente novamente.');
+      Alert.alert(t('common.error'), t('common.error'));
       resetScanner();
     } finally {
       setLoading(false);
@@ -105,7 +107,7 @@ export default function ScannerScreen() {
 
   const handleManualSubmit = () => {
     if (manualInputCode.trim().length < 3) {
-      Alert.alert('Código inválido', 'Por favor, digite um código válido.');
+      Alert.alert(t('scanner.invalid_code'), t('scanner.invalid_code_msg'));
       return;
     }
     processBarcode(manualInputCode.trim());
@@ -125,7 +127,7 @@ export default function ScannerScreen() {
 
     const parsedPrice = parsePrice(price);
     if (parsedPrice === null) {
-      Alert.alert('Preço inválido', 'Digite um valor numérico, como 12,90.');
+      Alert.alert(t('manual.invalid_price'), t('manual.invalid_price_msg'));
       return;
     }
 
@@ -141,7 +143,7 @@ export default function ScannerScreen() {
       });
       router.replace('/products');
     } catch {
-      Alert.alert('Erro', 'Não foi possível salvar o produto no banco local.');
+      Alert.alert(t('common.error'), t('common.error'));
     }
   };
 
@@ -171,7 +173,7 @@ export default function ScannerScreen() {
           onPress={() => setManualInputVisible(true)}
         >
           <Keyboard size={18} color="#FFFFFF" />
-          <Text style={styles.manualInputButtonText}>DIGITAR CÓDIGO</Text>
+          <Text style={styles.manualInputButtonText}>{t('scanner.manual_input')}</Text>
         </Pressable>
       </View>
 
@@ -183,14 +185,14 @@ export default function ScannerScreen() {
           <View style={styles.dimArea} />
         </View>
         <View style={styles.dimArea}>
-          <Text style={styles.instructionText}>Aponte para o código</Text>
+          <Text style={styles.instructionText}>{t('scanner.instruction')}</Text>
         </View>
       </View>
 
       {loading && (
         <View style={styles.loadingOverlay}>
           <ActivityIndicator size="large" color="#FFFFFF" />
-          <Text style={styles.loadingText}>Consultando múltiplas bases de dados...</Text>
+          <Text style={styles.loadingText}>{t('scanner.loading_api')}</Text>
         </View>
       )}
 
@@ -198,7 +200,7 @@ export default function ScannerScreen() {
       <Modal visible={manualInputVisible} transparent animationType="fade" onRequestClose={() => setManualInputVisible(false)}>
         <View style={styles.modalContainerCentral}>
           <View style={styles.modalContentSmall}>
-            <Text style={styles.label}>Digitar Código</Text>
+            <Text style={styles.label}>{t('scanner.type_code')}</Text>
             <TextInput
               style={styles.input}
               placeholder="Ex: 7891234567890"
@@ -215,7 +217,7 @@ export default function ScannerScreen() {
                 ]} 
                 onPress={() => setManualInputVisible(false)}
               >
-                <Text style={styles.modalSecondaryButtonText}>Cancelar</Text>
+                <Text style={styles.modalSecondaryButtonText}>{t('scanner.btn_cancel')}</Text>
               </Pressable>
               <Pressable 
                 style={({ pressed }) => [
@@ -224,7 +226,7 @@ export default function ScannerScreen() {
                 ]} 
                 onPress={handleManualSubmit}
               >
-                <Text style={styles.saveButtonText}>Pesquisar</Text>
+                <Text style={styles.saveButtonText}>{t('scanner.btn_search')}</Text>
               </Pressable>
             </View>
           </View>
@@ -240,13 +242,13 @@ export default function ScannerScreen() {
             </Pressable>
 
             <Image source={{ uri: productData?.image_url || undefined }} style={styles.productImg} resizeMode="contain" />
-            <Text style={styles.sourceBadge}>{productData?.source === 'local' ? 'Encontrado offline' : 'Encontrado online'}</Text>
+            <Text style={styles.sourceBadge}>{productData?.source === 'local' ? t('scanner.found_offline') : t('scanner.found_online')}</Text>
             <Text style={styles.productName}>{productData?.name}</Text>
-            <Text style={styles.productBrand}>{productData?.brand || 'Marca não informada'}</Text>
+            <Text style={styles.productBrand}>{productData?.brand || t('common.no_brand')}</Text>
             <Text style={styles.productBarcode}>{productData?.barcode}</Text>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Preço manual</Text>
+              <Text style={styles.label}>{t('scanner.price_manual')}</Text>
               <TextInput
                 style={styles.input}
                 placeholder="R$ 0,00"
@@ -258,7 +260,7 @@ export default function ScannerScreen() {
             </View>
 
             <Pressable style={styles.saveButton} onPress={handleSave}>
-              <Text style={styles.saveButtonText}>{productData?.source === 'local' ? 'Atualizar Preço' : 'Salvar no Catálogo'}</Text>
+              <Text style={styles.saveButtonText}>{productData?.source === 'local' ? t('scanner.update_price') : t('scanner.save_catalog')}</Text>
             </Pressable>
           </View>
         </View>

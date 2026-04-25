@@ -2,6 +2,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Save } from 'lucide-react-native';
 import { useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { saveProduct } from '@/database/db';
 import { useAppTheme } from '@/hooks/useAppTheme';
@@ -10,6 +11,7 @@ export default function ManualProductScreen() {
   const params = useLocalSearchParams<{ barcode?: string }>();
   const router = useRouter();
   const { colors } = useAppTheme();
+  const { t } = useTranslation();
   const [barcode, setBarcode] = useState(params.barcode ?? '');
   const [name, setName] = useState('');
   const [brand, setBrand] = useState('');
@@ -23,12 +25,12 @@ export default function ManualProductScreen() {
     const parsedPrice = parsePrice(price);
 
     if (!barcode.trim() || !name.trim()) {
-      Alert.alert('Campos obrigatórios', 'Informe pelo menos o código e o nome do produto.');
+      Alert.alert(t('manual.req_fields'), t('manual.req_msg'));
       return;
     }
 
     if (parsedPrice === null) {
-      Alert.alert('Preço inválido', 'Digite um valor numérico, como 12,90.');
+      Alert.alert(t('manual.invalid_price'), t('manual.invalid_price_msg'));
       return;
     }
 
@@ -45,7 +47,7 @@ export default function ManualProductScreen() {
       });
       router.replace('/products');
     } catch {
-      Alert.alert('Erro', 'Não foi possível salvar o produto.');
+      Alert.alert(t('common.error'), t('common.error'));
     } finally {
       setSaving(false);
     }
@@ -57,20 +59,20 @@ export default function ManualProductScreen() {
       contentContainerStyle={styles.content}
       contentInsetAdjustmentBehavior="automatic">
       <View style={styles.header}>
-        <Text style={[styles.title, { color: colors.text }]}>Cadastro Manual</Text>
+        <Text style={[styles.title, { color: colors.text }]}>{t('manual.title')}</Text>
         <Text style={[styles.subtitle, { color: colors.mutedText }]}>
-          Use quando o produto não tiver código legível ou não aparecer na Open Food Facts.
+          {t('manual.subtitle')}
         </Text>
       </View>
 
       <View style={[styles.form, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-        <Field label="Código EAN/UPC" value={barcode} onChangeText={setBarcode} keyboardType="number-pad" />
-        <Field label="Nome do produto" value={name} onChangeText={setName} autoCapitalize="words" />
-        <Field label="Marca" value={brand} onChangeText={setBrand} autoCapitalize="words" />
-        <Field label="Quantidade" value={quantity} onChangeText={setQuantity} placeholder="Ex.: 500 g, 1 L" />
-        <Field label="Categorias" value={categories} onChangeText={setCategories} placeholder="Ex.: bebidas, mercearia" />
-        <Field label="URL da imagem" value={imageUrl} onChangeText={setImageUrl} autoCapitalize="none" keyboardType="url" />
-        <Field label="Preço" value={price} onChangeText={setPrice} keyboardType="decimal-pad" placeholder="R$ 0,00" />
+        <Field label={t('manual.fields_barcode')} value={barcode} onChangeText={setBarcode} keyboardType="number-pad" />
+        <Field label={t('manual.fields_name')} value={name} onChangeText={setName} autoCapitalize="words" />
+        <Field label={t('manual.fields_brand')} value={brand} onChangeText={setBrand} autoCapitalize="words" />
+        <Field label={t('manual.fields_qty')} value={quantity} onChangeText={setQuantity} />
+        <Field label={t('manual.fields_cat')} value={categories} onChangeText={setCategories} />
+        <Field label={t('manual.fields_url')} value={imageUrl} onChangeText={setImageUrl} autoCapitalize="none" keyboardType="url" />
+        <Field label={t('manual.fields_price')} value={price} onChangeText={setPrice} keyboardType="decimal-pad" />
       </View>
 
       <Pressable
@@ -81,7 +83,7 @@ export default function ManualProductScreen() {
         disabled={saving}
         onPress={handleSave}>
         <Save size={19} color="#FFFFFF" />
-        <Text style={styles.saveText}>{saving ? 'Salvando...' : 'Salvar Produto'}</Text>
+        <Text style={styles.saveText}>{saving ? t('manual.saving') : t('manual.save_btn')}</Text>
       </Pressable>
     </ScrollView>
   );
